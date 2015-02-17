@@ -9,6 +9,7 @@
 #import "SDImageCache.h"
 #import "SDWebImageDecoder.h"
 #import "UIImage+MultiFormat.h"
+#import "UIImage+RawData.h"
 #import <CommonCrypto/CommonDigest.h>
 
 static const NSInteger kDefaultCacheMaxCacheAge = 60 * 60 * 24 * 7; // 1 week
@@ -267,6 +268,7 @@ BOOL ImageDataHasPNGPreffix(NSData *data) {
         UIImage *image = [UIImage sd_imageWithData:data];
         image = [self scaledImageForKey:key image:image];
         image = [UIImage decodedImageWithImage:image];
+        image.rawData = data;
         return image;
     }
     else {

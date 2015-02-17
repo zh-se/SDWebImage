@@ -8,6 +8,7 @@
 
 #import "MasterViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import <SDWebImage/UIImage+RawData.h>
 #import "DetailViewController.h"
 
 @interface MasterViewController () {
@@ -383,6 +384,11 @@
     cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
     [cell.imageView sd_setImageWithURL:[NSURL URLWithString:[_objects objectAtIndex:indexPath.row]]
                       placeholderImage:[UIImage imageNamed:@"placeholder"] options:indexPath.row == 0 ? SDWebImageRefreshCached : 0];
+
+    [cell.imageView sd_setImageWithURL:[NSURL URLWithString:[_objects objectAtIndex:indexPath.row]]
+                             completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+//                                 NSLog(@"raw data: %u", image.rawData.length);
+                             }];
     return cell;
 }
 

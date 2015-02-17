@@ -11,6 +11,7 @@
 #import "UIImage+MultiFormat.h"
 #import <ImageIO/ImageIO.h>
 #import "SDWebImageManager.h"
+#import "UIImage+RawData.h"
 
 @interface SDWebImageDownloaderOperation () <NSURLConnectionDataDelegate>
 
@@ -362,10 +363,12 @@
             UIImage *image = [UIImage sd_imageWithData:self.imageData];
             NSString *key = [[SDWebImageManager sharedManager] cacheKeyForURL:self.request.URL];
             image = [self scaledImageForKey:key image:image];
+            image.rawData = self.imageData;
             
             // Do not force decoding animated GIFs
             if (!image.images) {
                 image = [UIImage decodedImageWithImage:image];
+                image.rawData = self.imageData;
             }
             if (CGSizeEqualToSize(image.size, CGSizeZero)) {
                 completionBlock(nil, nil, [NSError errorWithDomain:@"SDWebImageErrorDomain" code:0 userInfo:@{NSLocalizedDescriptionKey : @"Downloaded image has 0 pixels"}], YES);
