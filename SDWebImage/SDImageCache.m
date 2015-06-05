@@ -145,6 +145,32 @@ BOOL ImageDataHasPNGPreffix(NSData *data) {
 
 #pragma mark ImageCache
 
+- (void)storeImage:(UIImage*)image withRawData:(NSData *)rawData forKey:(NSString *)key {
+    if (!image || !key)
+    {
+        return;
+    }
+    
+    image.rawData = rawData;
+    [self.memCache setObject:image forKey:key cost:image.size.height * image.size.width * image.scale];
+    dispatch_async(self.ioQueue, ^{
+        NSData *data = rawData;
+        if (data)
+        {
+            // Can't use defaultManager another thread
+            NSFileManager *fileManager = NSFileManager.new;
+            
+            if (![fileManager fileExistsAtPath:_diskCachePath])
+            {
+                [fileManager createDirectoryAtPath:_diskCachePath withIntermediateDirectories:YES attributes:nil error:NULL];
+            }
+            
+            [fileManager createFileAtPath:[self defaultCachePathForKey:key] contents:data attributes:nil];
+        }
+    });
+}
+
+
 - (void)storeImage:(UIImage *)image recalculateFromImage:(BOOL)recalculate imageData:(NSData *)imageData forKey:(NSString *)key toDisk:(BOOL)toDisk {
     if (!image || !key) {
         return;
