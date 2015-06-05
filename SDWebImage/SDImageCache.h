@@ -90,6 +90,7 @@ typedef void(^SDWebImageCalculateSizeBlock)(NSUInteger fileCount, NSUInteger tot
  */
 - (void)storeImage:(UIImage *)image forKey:(NSString *)key toDisk:(BOOL)toDisk;
 
+- (void)storeImage:(UIImage*)image withRawData:(NSData *)rawData forKey:(NSString *)key;
 /**
  * Store an image into memory and optionally disk cache at the given key.
  *
